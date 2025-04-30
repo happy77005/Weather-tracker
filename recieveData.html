@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 40px;
+      color: #333;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .value {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+    .label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Live Weather Tracker</h2>
+    <div class="value"><span class="label">Temperature:</span> <span id="temperature">Loading...</span></div>
+    <div class="value"><span class="label">Humidity:</span> <span id="humidity">Loading...</span></div>
+    <div class="value"><span class="label">Quality:</span> <span id="quality">Loading...</span></div>
+    <div class="value"><span class="label">Last Updated Time:</span> <span id="time">Loading...</span></div>
+
+  </div>
+
+  <script type="module">
+    
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSJAnfCY",
+      authDomain: "weather.firebaseapp.com",
+      projectId: "weather",
+      storageBucket: "weather.firebasestorage.app",
+      messagingSenderId: "426381",
+      appId: "1:426675149381:web:5c0fac",
+      measurementId: "G-PD"
+    };
+
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+
+  
+    async function fetchData() {
+      try {
+        const docRef = doc(db, "5214726", "acv241");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();  
+
+          document.getElementById("temperature").textContent = data.temprature + " °C";
+          document.getElementById("humidity").textContent = data.humidity + " %";
+          document.getElementById("quality").textContent = data.humidity_quality;
+          document.getElementById("time").textContent = data.time;
+        } else {
+          console.error("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  </script>
+</body>
+</html>
